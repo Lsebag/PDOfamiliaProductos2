@@ -4,7 +4,7 @@ ini_set('display_errors',true);
 error_reporting(E_ALL);
 
 
-require_once "conexion.php";
+//require_once "conexion.php";
 $carga=fn($clase)=>require("$clase.php");
 spl_autoload_register($carga);
 
@@ -38,12 +38,7 @@ switch ($opcion_submit){
     case "mostrarProductos":
         $codigo=$_POST['familia'];
         $listaProductos=$db->obtener_productos($codigo);
-        $msjProductos="<table>";
-        foreach ($listaProductos as $indice=>$valor){
-            $msjProductos.="<tr><td>$indice</td><td>$valor[nombre_corto]</td><td>$valor[familia]</td><td>$valor[cod]
-            </td><td>$valor[PVP]</td><td>$valor[descripcion]</td></tr>";
-        }
-        $msjProductos.="</table>";
+        $mostrarProductos=Plantilla::muestra_productos($listaProductos);
         break;
     case "logout":
         session_destroy();
@@ -52,6 +47,8 @@ switch ($opcion_submit){
 
     default://(Si intento acceder directamente)
 }}
+
+
 
 /*if (isset($_POST['submit'])){
     $cod=$_POST['familia'];
@@ -84,10 +81,9 @@ $msjProductos.="</table>";
 </head>
 <body>
 <div class="content">
-    <h1>Bienvenido a este sitio web <?= $usuario ?></h1><br>
-
-
+    <h1>Bienvenido a este sitio web <?= $usuario ?></h1>
     <form action="listado.php" method="post">
+        <p>Usted se encuentra conectado.</p>
         <button type="submit" name="submit" value="logout">Cerrar sesión</button>
     </form>
 
@@ -98,8 +94,10 @@ $msjProductos.="</table>";
             <?= Plantilla::html_select_familias($listaFamilias,$codigo) ?>
         </fieldset>
         <button type="submit" name="submit" value="mostrarProductos">Mostrar productos</button>
-        <?= $msjProductos??"" ?>
+
     </form>
+
+    <?= $mostrarProductos??"" ?>
 </div>
 
 

@@ -52,7 +52,7 @@ var_dump($conexion);*/
 ini_set('display_errors',true);
 error_reporting(E_ALL);
 
-require_once "conexion.php";
+//require_once "conexion.php";
 $carga=fn($clase)=>require("$clase.php");
 spl_autoload_register($carga);
 

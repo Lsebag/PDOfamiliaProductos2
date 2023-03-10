@@ -6,8 +6,13 @@ class DB
 
     public function __construct()
     {
+        $datos=parse_ini_file("conexion.ini");
+        $dsn=$datos['DSN'];
+        $user=$datos['USER'];
+        $pass=$datos['PASS'];
         try {
-            $this->conexion = new PDO(DSN, USER, PASS);
+            $this->conexion = new PDO($dsn, $user, $pass);
+//            $this->conexion = new PDO(DSN, USER, PASS);
         } catch (PDOException $exception) {
             die("No se ha podido conectar " . $exception->getMessage());
         }
@@ -108,6 +113,17 @@ class DB
         }
         return $filas;
 
+    }
+
+    public function obtener_producto_para_editar($cod){
+        $sentencia="select * from producto where cod=?";
+        $valores=[$cod];
+        $rtdo =$this->ejecuta_consulta($sentencia,$valores);
+        $filas=[];
+        while ($fila=$rtdo->fetch(PDO::FETCH_ASSOC)){
+            $filas[]=$fila;
+        }
+        return $filas;
     }
 
 }
