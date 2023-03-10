@@ -11,27 +11,16 @@ spl_autoload_register($carga);
 session_start();
 
 if (!isset($_SESSION['user'])){
-    header("location:index.php?msj=Debes de loguearte para acceder");
+    header("location:index.php?msj=Debes iniciar sesión para acceder");
     exit();
 }
 
 $usuario = $_SESSION['user'];
 
 
-$opcion = $_POST['submit'] ?? "";
-switch ($opcion){
-    case "logout":
-        session_destroy();
-        header("location:index.php?msj=Espero que vuelvas pronto");
-        exit();
-    default://(Si intento acceder directamente)
-}
-
 $db = new DB();
 
 
-
-$listaFamilias=$db->obtener_familias();
 /*$familiasDesplegable='<select>';
 foreach ($listaFamilias as $familia){
 $familiasDesplegable.="<option value=$familia[cod]>$familia[nombre]</option>";
@@ -39,9 +28,32 @@ $familiasDesplegable.="<option value=$familia[cod]>$familia[nombre]</option>";
 $familiasDesplegable.="</select>";*/
 
 
+$codigo=$_POST['familia']??"";
+$listaFamilias=$db->obtener_familias();
+$mostrar_select_familias=Plantilla::html_select_familias($listaFamilias,$codigo);
 
-//mostrarProductos
+$opcion_submit= $_POST['submit']??"";
 if (isset($_POST['submit'])){
+switch ($opcion_submit){
+    case "mostrarProductos":
+        $codigo=$_POST['familia'];
+        $listaProductos=$db->obtener_productos($codigo);
+        $msjProductos="<table>";
+        foreach ($listaProductos as $indice=>$valor){
+            $msjProductos.="<tr><td>$indice</td><td>$valor[nombre_corto]</td><td>$valor[familia]</td><td>$valor[cod]
+            </td><td>$valor[PVP]</td><td>$valor[descripcion]</td></tr>";
+        }
+        $msjProductos.="</table>";
+        break;
+    case "logout":
+        session_destroy();
+        header("location:index.php?msj=Espero que vuelvas pronto");
+        exit();
+
+    default://(Si intento acceder directamente)
+}}
+
+/*if (isset($_POST['submit'])){
     $cod=$_POST['familia'];
     $listaProductos=$db->obtener_productos($cod);
     $msjProductos="<table>";
@@ -50,7 +62,7 @@ foreach ($listaProductos as $indice=>$valor){
 <td>$valor[cod]</td><td>$valor[PVP]</td><td>$valor[descripcion]</td></tr>";
 }
 $msjProductos.="</table>";
-}
+}*/
 
 
 
@@ -72,22 +84,22 @@ $msjProductos.="</table>";
 </head>
 <body>
 <div class="content">
-<h1>Bienvenido a este sitio web <?= $usuario ?></h1><br>
+    <h1>Bienvenido a este sitio web <?= $usuario ?></h1><br>
 
 
-<form action="listado.php" method="post">
-    <button type="submit" name="submit" value="logout">Cerrar sesión</button>
-</form>
+    <form action="listado.php" method="post">
+        <button type="submit" name="submit" value="logout">Cerrar sesión</button>
+    </form>
 
 
-<form action="listado.php" method="post">
-<fieldset>
-    <legend>Listado de familias</legend>
-    <?= Plantilla::html_select_familias($listaFamilias) ?>
-</fieldset>
-    <button type="submit" name="submit" value="mostrarProductos">Mostrar productos</button>
-    <?= $msjProductos??"" ?>
-</form>
+    <form action="listado.php" method="post">
+        <fieldset>
+            <legend>Listado de familias</legend>
+            <?= Plantilla::html_select_familias($listaFamilias,$codigo) ?>
+        </fieldset>
+        <button type="submit" name="submit" value="mostrarProductos">Mostrar productos</button>
+        <?= $msjProductos??"" ?>
+    </form>
 </div>
 
 

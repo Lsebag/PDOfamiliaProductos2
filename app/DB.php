@@ -97,7 +97,7 @@ class DB
     }
 
 
-    public function obtener_productos($familia)
+    public function obtener_productos($familia): array
     {
         $sentencia = 'select * from producto where familia= ?';
         $valores=[$familia];
