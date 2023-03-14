@@ -126,4 +126,15 @@ class DB
         return $filas;
     }
 
+    public function actualizar_producto($producto){
+        $sentencia="update producto set nombre_corto=?,nombre=?,descripcion=?,PVP=?,familia=? where cod=?";
+        $parametros = array_values($producto);
+
+        $rtdo=$this->ejecuta_consulta($sentencia,$parametros);
+        if ($rtdo->rowCount() > 0)
+            return true;
+        else
+            return false;
+    }
+
 }

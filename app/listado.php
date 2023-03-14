@@ -28,25 +28,35 @@ $familiasDesplegable.="<option value=$familia[cod]>$familia[nombre]</option>";
 $familiasDesplegable.="</select>";*/
 
 
-$codigo=$_POST['familia']??"";
+$codigo=$_POST['familia']?? $_GET['familia']??"";
 $listaFamilias=$db->obtener_familias();
 $mostrar_select_familias=Plantilla::html_select_familias($listaFamilias,$codigo);
+if (isset($_GET['actualizado'])){
+    $msjActualiza="Ha actualizado el producto";
+}
+
+if (isset ($codigo)) {
+    $listaProductos = $db->obtener_productos($codigo);
+    $mostrarProductos = Plantilla::muestra_productos($listaProductos);
+}
+
 
 $opcion_submit= $_POST['submit']??"";
-if (isset($_POST['submit'])){
 switch ($opcion_submit){
-    case "mostrarProductos":
-        $codigo=$_POST['familia'];
-        $listaProductos=$db->obtener_productos($codigo);
-        $mostrarProductos=Plantilla::muestra_productos($listaProductos);
-        break;
+//    case "mostrarProductos":
+//        $codigo=$_POST['familia'];
+//        $listaProductos=$db->obtener_productos($codigo);
+//        $mostrarProductos=Plantilla::muestra_productos($listaProductos);
+//        break;
     case "logout":
         session_destroy();
         header("location:index.php?msj=Espero que vuelvas pronto");
         exit();
 
     default://(Si intento acceder directamente)
-}}
+
+
+}
 
 
 
@@ -82,6 +92,7 @@ $msjProductos.="</table>";
 <body>
 <div class="content">
     <h1>Bienvenido a este sitio web <?= $usuario ?></h1>
+    <p><?= $msjActualiza??"" ?></p>
     <form action="listado.php" method="post">
         <p>Usted se encuentra conectado.</p>
         <button type="submit" name="submit" value="logout">Cerrar sesión</button>
