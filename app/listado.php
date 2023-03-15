@@ -37,7 +37,7 @@ if (isset($_GET['actualizado'])){
 
 if (isset ($codigo)) {
     $listaProductos = $db->obtener_productos($codigo);
-    $mostrarProductos = Plantilla::muestra_productos($listaProductos);
+    $mostrarProductos = Plantilla::html_productos($listaProductos);
 }
 
 

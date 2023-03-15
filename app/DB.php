@@ -127,8 +127,11 @@ class DB
     }
 
     public function actualizar_producto($producto){
+        // En la sentencia SQL no es necesario el campo familia
         $sentencia="update producto set nombre_corto=?,nombre=?,descripcion=?,PVP=?,familia=? where cod=?";
         $parametros = array_values($producto);
+//        $parametros=[$producto['nombre'],$producto['nombre_corto'],$producto['descripcion'],
+//        $producto['PVP'],$producto['cod']];
 
         $rtdo=$this->ejecuta_consulta($sentencia,$parametros);
         if ($rtdo->rowCount() > 0)
